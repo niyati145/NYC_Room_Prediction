@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NYC Room Type Predictor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="grain"></div>
+
+<header class="topbar">
+  <div class="topbar__title">
+    <span class="topbar__mark">◐</span>
+    <h1>NYC Room Type Predictor</h1>
+  </div>
+  <div class="status" id="apiStatus">
+    <span class="status__dot" id="statusDot"></span>
+    <span id="statusText">checking api…</span>
+  </div>
+</header>
+
+<main class="layout">
+
+  <!-- LEFT: FORM -->
+  <section class="panel form-panel">
+    <p class="panel__lede">Describe a listing and the model will predict whether it's an entire home, a private room, or a shared room.</p>
+
+    <form id="predictForm">
+
+      <fieldset class="group">
+        <legend>Location</legend>
+        <div class="row">
+          <label class="field">
+            <span>Latitude</span>
+            <input type="number" step="any" name="latitude" min="-90" max="90" placeholder="40.7128" required>
+          </label>
+          <label class="field">
+            <span>Longitude</span>
+            <input type="number" step="any" name="longitude" min="-180" max="180" placeholder="-73.9352" required>
+          </label>
+        </div>
+        <div class="row">
+          <label class="field">
+            <span>Borough</span>
+            <select name="neighbourhood_group" required>
+              <option value="" disabled selected>Select a borough</option>
+              <option>Manhattan</option>
+              <option>Brooklyn</option>
+              <option>Queens</option>
+              <option>Bronx</option>
+              <option>Staten Island</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Neighbourhood</span>
+            <input type="text" name="neighbourhood" placeholder="Williamsburg" required>
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="group">
+        <legend>Listing details</legend>
+        <div class="row">
+          <label class="field">
+            <span>Price per night ($)</span>
+            <input type="number" step="any" name="price" min="0" placeholder="150" required>
+          </label>
+          <label class="field">
+            <span>Minimum nights</span>
+            <input type="number" name="minimum_nights" min="1" placeholder="3" required>
+          </label>
+        </div>
+        <div class="row">
+          <label class="field">
+            <span>Availability (days / 365)</span>
+            <input type="number" name="availability_365" min="0" max="365" placeholder="200" required>
+          </label>
+          <label class="field">
+            <span>Host's total listings</span>
+            <input type="number" name="calculated_host_listings_count" min="0" placeholder="2" required>
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="group">
+        <legend>Reviews</legend>
+        <div class="row">
+          <label class="field">
+            <span>Number of reviews</span>
+            <input type="number" name="number_of_reviews" min="0" placeholder="10" required>
+          </label>
+          <label class="field">
+            <span>Reviews per month</span>
+            <input type="number" step="any" name="reviews_per_month" min="0" placeholder="1.2" required>
+          </label>
+        </div>
+      </fieldset>
+
+      <button type="submit" class="predict-btn" id="predictBtn">
+        <span class="predict-btn__label">Predict room type</span>
+        <span class="predict-btn__spinner" aria-hidden="true"></span>
+      </button>
+      <p class="error" id="formError" hidden></p>
+    </form>
+  </section>
+
+  <!-- RIGHT: RESULT -->
+  <section class="panel result-panel">
+    <div class="result-empty" id="resultEmpty">
+      <div class="pulse-icon">
+        <span class="pulse-ring"></span>
+        <span class="pulse-ring pulse-ring--delay"></span>
+        <span class="pulse-core">🏠</span>
+      </div>
+      <p>Fill in the listing and run a prediction to see the result here.</p>
+    </div>
+
+    <div class="result-live" id="resultLive" hidden>
+      <span class="result-eyebrow">Predicted room type</span>
+      <h2 id="resultLabel">—</h2>
+
+      <div class="bars" id="bars"><!-- injected by script.js --></div>
+
+      <button class="reset-btn" id="resetBtn" type="button">Run another</button>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <label class="endpoint-field">
+    <span>API endpoint</span>
+    <input type="text" id="apiBase" value="http://127.0.0.1:8000">
+  </label>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
